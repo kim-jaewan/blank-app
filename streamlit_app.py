@@ -20,7 +20,7 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
     return decrypted[:-pad_len].decode("utf-8")
 
 # ✅ Query 파라미터에서 token 추출
-token_encrypted = st.query_params.get("token", [None])[0]
+token_encrypted = st.query_params.get("token", [None])
 
 st.title("🔐 SSO 인증 처리 중...")
 
