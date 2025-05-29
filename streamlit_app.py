@@ -4,7 +4,7 @@ import base64
 from Crypto.Cipher import AES
 
 A_SITE_URL = "https://kitchen-portal.test/api/sso"
-APP_KEY = "base64:gEl/34nLR6mc2OhlbWsmZvu5rPVGWZLaDQinl/2GqhI="
+APP_KEY = "base64:X06Qj5yQdp+WViPbjbvdWLcCvHz0lBvoCEGkT6mxmGM="
 
 def get_aes_key(app_key_base64: str) -> bytes:
     return base64.b64decode(app_key_base64.split(":")[1])
