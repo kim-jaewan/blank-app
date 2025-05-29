@@ -23,7 +23,7 @@ def decrypt_laravel_token(encrypted_token_b64: str, app_key_b64: str) -> str:
     return decrypted[:-pad_len].decode("utf-8")
 
 # 토큰 추출
-token_encrypted = st.query_params.get("token", [None])[0]
+token_encrypted = st.query_params.get("token", [None])
 
 if not token_encrypted or token_encrypted == "None":
     st.error("❌ URL에 토큰 없음 – 인증 실패")
