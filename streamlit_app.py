@@ -4,8 +4,7 @@ import base64
 from Crypto.Cipher import AES
 
 A_SITE_URL = "https://kitchen-portal.dev.amuz.kr/api/sso"
-
-APP_KEY = "base64:X06Qj5yQdp+WViPbjbvdWLcCvHz0lBvoCEGkT6mxmGM="
+APP_KEY = "base64:gEl/34nLR6mc2OhlbWsmZvu5rPVGWZLaDQinl/2GqhI="
 
 def decrypt_token(encrypted_token_b64, app_key_b64):
     key = base64.b64decode(app_key_b64.split(":")[1])
@@ -16,6 +15,7 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
     pad_len = decrypted[-1]
     return decrypted[:-pad_len].decode("utf-8")
 
+# ✅ 리스트에서 첫 값을 꺼냄
 token_encrypted = st.query_params.get("token", [None])
 
 if not token_encrypted:
@@ -32,7 +32,7 @@ try:
     response = requests.post(
         A_SITE_URL,
         headers={"Authorization": f"Bearer {jwt_token}"},
-        json={"redirect_to": "https://blank-app-2mgkkp65p39.streamlit.app"}  # B URL 전달
+        json={"redirect_to": "https://blank-app-2mgkkp65p39.streamlit.app"}
     )
     if response.status_code == 200:
         st.success("✅ 인증 성공: A에서 로그인 처리됨")
