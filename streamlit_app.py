@@ -4,9 +4,12 @@ import base64
 from Crypto.Cipher import AES
 import json
 
+# 🔐 설정
 A_SITE_URL = "https://kitchen-portal.dev.amuz.kr/api/sso"
 APP_KEY = "base64:X06Qj5yQdp+WViPbjbvdWLcCvHz0lBvoCEGkT6mxmGM="
+DEBUG_MODE = True  # 배포 시 False로 전환
 
+# 🔓 복호화 함수
 def decrypt_token(encrypted_token_b64, app_key_b64):
     key = base64.b64decode(app_key_b64.split(":")[1])
     raw = base64.b64decode(encrypted_token_b64)
@@ -16,46 +19,60 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
     pad_len = decrypted[-1]
     return decrypted[:-pad_len].decode("utf-8")
 
-# ✅ 리스트에서 첫 번째 값만 추출해야 복호화 가능
+# ✅ Query 파라미터에서 token 추출
 token_encrypted = st.query_params.get("token", [None])[0]
 
-# 🔎 토큰 표시
-st.subheader("🔐 Encrypted Token (Base64)")
-st.code(token_encrypted or "None", language="text")
+st.title("🔐 SSO 인증 처리 중...")
 
-st.success("로그인 완료! 잠시 후 자동 이동합니다.")
-st.markdown("Redirecting...")
-
-st.experimental_rerun()
 if not token_encrypted:
     st.error("❌ 토큰 없음 – 인증 실패")
     st.stop()
 
-# 🔓 복호화
+# 🔍 디버그용: 암호화된 토큰 출력
+if DEBUG_MODE:
+    st.subheader("🔒 Encrypted Token (Base64)")
+    st.code(token_encrypted, language="text")
+
+# 🔓 복호화 → JWT
 try:
     jwt_token = decrypt_token(token_encrypted, APP_KEY)
-    st.subheader("🔓 Decrypted JWT")
-    st.code(jwt_token, language="text")
+
+    if DEBUG_MODE:
+        st.subheader("🔓 Decrypted JWT")
+        st.code(jwt_token, language="text")
+
+        try:
+            jwt_json = json.loads(jwt_token)
+            st.subheader("🧾 Token Payload (parsed)")
+            st.json(jwt_json)
+        except:
+            st.warning("⚠️ JWT JSON 파싱 실패")
 except Exception as e:
     st.error(f"❌ 복호화 실패: {str(e)}")
     st.stop()
 
-# ✅ A 서버에 POST 요청
+# 📡 A 서버에 POST 요청
 try:
     response = requests.post(
         A_SITE_URL,
         headers={"Authorization": f"Bearer {jwt_token}"},
-        json={"redirect_to": "https://blank-app-2mgkkp65p39.streamlit.app"}
+        json={}  # redirect_to 없이 보내도 A에서 처리
     )
-    st.subheader("📡 A 사이트 인증 응답")
+
+    st.subheader("📡 A 서버 응답")
     if response.status_code == 200:
-        st.success("✅ 인증 성공: A에서 로그인 처리됨")
-        try:
-            st.json(response.json())
-        except:
-            st.code(response.text)
+        data = response.json()
+        redirect_url = data.get("redirect_url", "/")
+        st.success("✅ 인증 성공! 잠시 후 이동합니다.")
+        st.markdown(f"[👉 수동 이동]({redirect_url})")
+
+        # 🔄 3초 후 자동 리다이렉트
+        st.markdown(
+            f"""<meta http-equiv="refresh" content="3;url={redirect_url}" />""",
+            unsafe_allow_html=True
+        )
     else:
         st.error(f"❌ 인증 실패: {response.status_code}")
         st.code(response.text)
 except Exception as e:
-    st.error(f"❌ POST 실패: {str(e)}")
+    st.error(f"❌ A 서버 요청 실패: {str(e)}")
