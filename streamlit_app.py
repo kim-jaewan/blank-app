@@ -15,8 +15,8 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
     pad_len = decrypted[-1]
     return decrypted[:-pad_len].decode("utf-8")
 
-# ✅ 리스트에서 첫 값을 꺼냄
-token_encrypted = st.query_params.get("token", [None])
+# ✅ 리스트에서 첫 번째 값만 추출해야 복호화 가능
+token_encrypted = st.query_params.get("token", [None])[0]
 
 if not token_encrypted:
     st.error("❌ 토큰 없음 – 인증 실패")
