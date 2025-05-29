@@ -20,9 +20,21 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
     pad_len = decrypted[-1]
     return decrypted[:-pad_len].decode("utf-8")
 
+# ✅ Query 파라미터 처리
 params = st.query_params
-token_encrypted = unquote(params.get("token", [None])[0] or "")
+token_encrypted_raw = params.get("token", [None])[0] or ""
 redirect_to = params.get("redirect_to", ["/"])[0]
+
+# ✅ URL 디코딩 처리
+token_encrypted = unquote(token_encrypted_raw)
+
+# 🔍 값 출력
+st.subheader("📥 Query Params")
+st.code({
+    "raw_token": token_encrypted_raw,
+    "decoded_token": token_encrypted,
+    "redirect_to": redirect_to
+})
 
 if not token_encrypted:
     st.error("❌ 토큰 없음")
@@ -30,6 +42,16 @@ if not token_encrypted:
 
 try:
     jwt_token = decrypt_token(token_encrypted, APP_KEY)
+
+    st.subheader("🔓 Decrypted JWT")
+    st.code(jwt_token)
+
+    try:
+        payload = json.loads(jwt_token)
+        st.subheader("📄 JWT Payload")
+        st.json(payload)
+    except:
+        st.warning("⚠️ JSON 파싱 실패")
 
     # Laravel로 로그인 처리 요청
     response = requests.post(
@@ -39,6 +61,10 @@ try:
         verify=False
     )
     result = response.json()
+
+    st.subheader("📡 API 응답")
+    st.json(result)
+
     if response.ok:
         st.success("✅ 인증 성공, 이동 중...")
         st.markdown(f"""
