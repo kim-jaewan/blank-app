@@ -55,8 +55,16 @@ except Exception as e:
 st.success("✅ 인증 성공! 잠시 후 이동합니다.")
 st.markdown(f"[👉 수동 이동하기]({redirect_to})")
 
-# 🔄 3초 후 자동 리디렉션
+# 🔄 ✅ <meta> 대신 <script> 사용한 리디렉션
 st.markdown(
-    f"""<meta http-equiv="refresh" content="3;url={redirect_to}" />""",
+    f"""
+    <script>
+        setTimeout(function() {{
+            window.location.href = "{redirect_to}";
+        }}, 3000);
+    </script>
+    """,
     unsafe_allow_html=True
+)
+
 )
