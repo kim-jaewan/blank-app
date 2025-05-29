@@ -6,7 +6,6 @@ JWT_SECRET = "y2KvwnjAMbv4dwrNl8uCRreJjF5Q60ptqK1w5X3AT/SxfJdIRb6TPIve7lAM85klcp
 A_LOGIN_URL = "https://kitchen-portal.test/auth/login"
 
 token = st.query_params.get("token", [None])
-token = token[0] if isinstance(token, list) else token
 
 st.write("✅ 토큰:", token)
 st.write("✅ 수신 여부:", token is not None)
