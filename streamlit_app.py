@@ -7,7 +7,7 @@ A_LOGIN_URL = "https://kitchen-portal.test/auth/login"
 
 # 쿼리 파라미터에서 토큰 안전하게 추출
 token = st.query_params.get("token", [None])[0]
-
+st.write("✅ 토큰 수신 여부:", token)
 st.write("✅ 토큰 수신 여부:", token is not None)
 st.write("📦 토큰 길이:", len(token) if token else 0)
 
