@@ -4,7 +4,7 @@ import base64
 from Crypto.Cipher import AES
 
 A_SITE_URL = "https://kitchen-portal.dev.amuz.kr/api/sso"
-APP_KEY = "base64:gEl/34nLR6mc2OhlbWsmZvu5rPVGWZLaDQinl/2GqhI="
+APP_KEY = "base64:X06Qj5yQdp+WViPbjbvdWLcCvHz0lBvoCEGkT6mxmGM="
 
 def decrypt_token(encrypted_token_b64, app_key_b64):
     key = base64.b64decode(app_key_b64.split(":")[1])
