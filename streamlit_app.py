@@ -12,6 +12,7 @@ st.write("✅ 토큰:", token)
 st.write("✅ 수신 여부:", token is not None)
 st.write("📦 길이:", len(token) if token else 0)
 
+
 def redirect_without_token():
     html("""
         <script>
@@ -22,20 +23,19 @@ def redirect_without_token():
     """, height=0)
 
 def redirect_to_login():
-    html(f"<script>window.location.href = '{A_LOGIN_URL}';</script>", height=0)
+    html(f"""
+        <script>
+            window.top.location.href = "{A_LOGIN_URL}";
+        </script>
+    """, height=0)
 
 if token:
     try:
-        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        st.success("✅ 유효한 토큰입니다.")
-        st.json(payload)
+        jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
         redirect_without_token()
     except jwt.ExpiredSignatureError:
-        st.error("❌ 만료된 토큰입니다.")
         redirect_to_login()
     except jwt.InvalidTokenError:
-        st.error("❌ 유효하지 않은 토큰입니다.")
         redirect_to_login()
 else:
-    st.warning("⚠️ 토큰이 없습니다.")
     redirect_to_login()
