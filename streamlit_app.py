@@ -3,9 +3,10 @@ import base64
 import requests
 from Crypto.Cipher import AES
 import json
+from urllib.parse import unquote
 
 APP_KEY = "base64:X06Qj5yQdp+WViPbjbvdWLcCvHz0lBvoCEGkT6mxmGM="
-API_URL = "https://kitchen-portal.dev.amuz.kr/api/sso"  # Laravel API 주소
+API_URL = "https://kitchen-portal.dev.amuz.kr/api/sso"
 
 def fix_base64_padding(s):
     return s + '=' * (-len(s) % 4)
@@ -20,8 +21,8 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
     return decrypted[:-pad_len].decode("utf-8")
 
 params = st.query_params
-token_encrypted = params.get("token", [None])[0]
-redirect_to = params.get("redirect_to", ["/"])
+token_encrypted = unquote(params.get("token", [None])[0] or "")
+redirect_to = params.get("redirect_to", ["/"])[0]
 
 if not token_encrypted:
     st.error("❌ 토큰 없음")
@@ -35,7 +36,7 @@ try:
         API_URL,
         headers={"Authorization": f"Bearer {jwt_token}"},
         json={"redirect_to": redirect_to},
-        verify=False  # 내부망 http라면 SSL 무시
+        verify=False
     )
     result = response.json()
     if response.ok:
