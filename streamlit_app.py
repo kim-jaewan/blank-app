@@ -18,7 +18,7 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
 
 params = st.query_params
 token_encrypted = params.get("token", [None])[0]
-redirect_to = params.get("redirect_to", ["/"])[0]
+redirect_to = params.get("redirect_to", ["/"])
 
 if not token_encrypted:
     st.error("❌ 토큰 없음")
