@@ -15,7 +15,7 @@ st.write("토큰 값:", token)
 def redirect_to(url: str):
     html(f"""
         <script>
-            window.top.location.href = "{url}";
+            window.location.replace("{url}");
         </script>
     """, height=0)
 
