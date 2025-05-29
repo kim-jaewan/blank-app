@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 import base64
-from crypt import AES
+from Crypto.Cipher import AES
 
 # ------------------------
 # 설정
