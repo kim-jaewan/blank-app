@@ -22,7 +22,7 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
 
 # ✅ Query 파라미터 처리
 params = st.query_params
-token_encrypted_raw = params.get("token", [None])[0] or ""
+token_encrypted_raw = params.get("token", [None]) or ""
 redirect_to = params.get("redirect_to", ["/"])[0]
 
 # ✅ URL 디코딩 처리
