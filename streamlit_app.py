@@ -5,11 +5,14 @@ from Crypto.Cipher import AES
 import json
 
 APP_KEY = "base64:X06Qj5yQdp+WViPbjbvdWLcCvHz0lBvoCEGkT6mxmGM="
-API_URL = "https://kitchen-portal.test/api/sso"  # Laravel API 주소
+API_URL = "https://kitchen-portal.dev.amuz.kr/api/sso"  # Laravel API 주소
+
+def fix_base64_padding(s):
+    return s + '=' * (-len(s) % 4)
 
 def decrypt_token(encrypted_token_b64, app_key_b64):
     key = base64.b64decode(app_key_b64.split(":")[1])
-    raw = base64.b64decode(encrypted_token_b64)
+    raw = base64.b64decode(fix_base64_padding(encrypted_token_b64))
     iv, encrypted = raw[:16], raw[16:]
     cipher = AES.new(key, AES.MODE_CBC, iv)
     decrypted = cipher.decrypt(encrypted)
