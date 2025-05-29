@@ -16,7 +16,7 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
     pad_len = decrypted[-1]
     return decrypted[:-pad_len].decode("utf-8")
 
-token_encrypted = st.query_params.get("token", [None])[0]
+token_encrypted = st.query_params.get("token", [None])
 
 if not token_encrypted:
     st.error("❌ 토큰 없음 – 인증 실패")
