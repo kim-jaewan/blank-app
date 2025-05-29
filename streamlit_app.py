@@ -2,7 +2,7 @@ import streamlit as st
 import jwt
 from streamlit.components.v1 import html
 
-JWT_SECRET = "..."  # 실제 시크릿 키 입력
+JWT_SECRET = "y2KvwnjAMbv4dwrNl8uCRreJjF5Q60ptqK1w5X3AT/SxfJdIRb6TPIve7lAM85klcpWmod8TPNM9ePXS6Z4rkA=="
 A_LOGIN_URL = "https://kitchen-portal.test/auth/login"
 
 token = st.query_params.get("token", [None])
