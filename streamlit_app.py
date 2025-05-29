@@ -23,6 +23,10 @@ token_encrypted = st.query_params.get("token", [None])[0]
 st.subheader("🔐 Encrypted Token (Base64)")
 st.code(token_encrypted or "None", language="text")
 
+st.success("로그인 완료! 잠시 후 자동 이동합니다.")
+st.markdown("Redirecting...")
+
+st.experimental_rerun()
 if not token_encrypted:
     st.error("❌ 토큰 없음 – 인증 실패")
     st.stop()
