@@ -20,6 +20,15 @@ def decrypt_token(encrypted_token_b64, app_key_b64):
     pad_len = decrypted[-1]
     return decrypted[:-pad_len].decode("utf-8")
 
+def parse_jwt_payload(jwt_token):
+    parts = jwt_token.split(".")
+    if len(parts) != 3:
+        return None
+    payload_b64 = fix_base64_padding(parts[1])
+    payload_json = base64.urlsafe_b64decode(payload_b64).decode("utf-8")
+    return json.loads(payload_json)
+
+
 # ✅ Query 파라미터 처리
 params = st.query_params
 token_encrypted_raw = params.get("token", [None]) or ""
@@ -47,7 +56,7 @@ try:
     st.code(jwt_token)
 
     try:
-        payload = json.loads(jwt_token)
+        payload = parse_jwt_payload(jwt_token)
         st.subheader("📄 JWT Payload")
         st.json(payload)
     except:
