@@ -1,46 +1,33 @@
 import streamlit as st
 import jwt
-import webbrowser
 
-from urllib.parse import urlencode
-
-# JWT 비밀 키 (A 사이트와 동일하게 설정되어야 함)
+# JWT 시크릿키 (A 사이트와 동일하게)
 JWT_SECRET = "y2KvwnjAMbv4dwrNl8uCRreJjF5Q60ptqK1w5X3AT/SxfJdIRb6TPIve7lAM85klcpWmod8TPNM9ePXS6Z4rkA=="
 JWT_ALGORITHM = "HS256"
 
-# 현재 URL에서 토큰 가져오기
-query_params = st.experimental_get_query_params()
-token = query_params.get("token", [None])[0]
+# A 사이트 로그인 URL
+A_LOGIN_URL = "https://kitchen-portal.test/auth/login"
 
-# 현재 페이지의 base URL (토큰 제거용)
-base_url = st.request.url.split('?')[0]
+# 최신 Streamlit 방식: 쿼리 파라미터 가져오기
+query_params = st.query_params
+token = query_params.get("token")
 
-# 조건 분기
-if not token:
-    # 토큰 없으면 A 사이트 로그인 페이지로 리디렉션
-    st.markdown("""
-        <meta http-equiv="refresh" content="0; url='https://kitchen-portal.test/auth/login'" />
-    """, unsafe_allow_html=True)
-
-else:
+# 토큰 유무 확인
+if token:
     try:
-        # 토큰 디코딩 (유효성 및 만료 검증 포함)
-        decoded = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        user_data = decoded.get("user_data", {})
+        # 디코드 및 검증
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
 
-        # 토큰 유효 → 홈으로 리디렉션 (토큰 제거된 URL)
-        st.markdown(f"""
-            <meta http-equiv="refresh" content="0; url='{base_url}'" />
-        """, unsafe_allow_html=True)
+        # 토큰이 유효한 경우: URL에서 토큰 제거 (query 비우기)
+        st.query_params.clear()
+        st.experimental_rerun()
 
     except jwt.ExpiredSignatureError:
-        # 만료된 토큰 → A 로그인 페이지로
-        st.markdown("""
-            <meta http-equiv="refresh" content="0; url='https://kitchen-portal.test/auth/login'" />
-        """, unsafe_allow_html=True)
-
+        # 만료된 토큰
+        st.markdown(f"<meta http-equiv='refresh' content='0;url={A_LOGIN_URL}'>", unsafe_allow_html=True)
     except jwt.InvalidTokenError:
-        # 잘못된 토큰 → A 로그인 페이지로
-        st.markdown("""
-            <meta http-equiv="refresh" content="0; url='https://kitchen-portal.test/auth/login'" />
-        """, unsafe_allow_html=True)
+        # 잘못된 토큰
+        st.markdown(f"<meta http-equiv='refresh' content='0;url={A_LOGIN_URL}'>", unsafe_allow_html=True)
+else:
+    # 토큰 없음: 로그인 페이지로 이동
+    st.markdown(f"<meta http-equiv='refresh' content='0;url={A_LOGIN_URL}'>", unsafe_allow_html=True)
