@@ -85,12 +85,12 @@ try:
         st.warning("⚠️ JWT가 JSON 포맷이 아닙니다.")
 
     # 실제 리디렉션 (디버깅 후에는 활성화)
-    # st.success("✅ 인증 성공! 3초 후 이동합니다.")
-    # st.markdown(f"""
-    #   <script>
-    #     setTimeout(() => window.location.href = "{redirect_to}?token={raw_token}", 3000);
-    #   </script>
-    # """, unsafe_allow_html=True)
+    st.success("✅ 인증 성공! 3초 후 이동합니다.")
+    st.markdown(f"""
+      <script>
+        setTimeout(() => window.location.href = "{redirect_to}?token={raw_token}", 3000);
+      </script>
+    """, unsafe_allow_html=True)
 
 except Exception as e:
     st.error(f"❌ 디코딩 과정 중 오류 발생: {e}")
