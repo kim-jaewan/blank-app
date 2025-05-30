@@ -88,7 +88,7 @@ try:
     st.success("✅ 인증 성공! 3초 후 이동합니다.")
     st.markdown(f"""
       <script>
-        setTimeout(() => window.location.href = "{redirect_to}?token={raw_token}", 3000);
+        setTimeout(() => window.location.href = "{redirect_to}", 3000);
       </script>
     """, unsafe_allow_html=True)
 
