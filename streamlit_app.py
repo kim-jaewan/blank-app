@@ -5,8 +5,8 @@ from Crypto.Cipher import AES
 import jwt
 from urllib.parse import unquote
 
-JWT_SECRET= ""
-APP_KEY = ""
+JWT_SECRET= "y2KvwnjAMbv4dwrNl8uCRreJjF5Q60ptqK1w5X3AT/SxfJdIRb6TPIve7lAM85klcpWmod8TPNM9ePXS6Z4rkA=="
+APP_KEY = "base64:gEl/34nLR6mc2OhlbWsmZvu5rPVGWZLaDQinl/2GqhI="
 
 def fix_padding(s: str) -> str:
     mod = len(s) % 4
