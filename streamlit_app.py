@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import base64
 from Crypto.Cipher import AES
-import json
+import jwt
 from urllib.parse import unquote
 
 JWT_SECRET= "y2KvwnjAMbv4dwrNl8uCRreJjF5Q60ptqK1w5X3AT/SxfJdIRb6TPIve7lAM85klcpWmod8TPNM9ePXS6Z4rkA=="
@@ -82,8 +82,8 @@ try:
     try:
         payload = jwt.decode(
             jwt_token,
-            JWT_SECRET,
-            algorithms=["HS256"],
+            JWT_SECRET,                # A 사이트와 공유한 서명 키
+            algorithms=["HS256"],      # 서명 알고리즘
             options={"require": ["exp", "iss", "aud"]},  
         )
         st.subheader("🔟 JWT Payload (검증 완료)")
