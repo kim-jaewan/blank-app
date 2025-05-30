@@ -24,7 +24,7 @@ def decrypt_token_step_by_step(enc_b64, app_key):
     st.code(enc_b64_padded)
 
     # Base64 디코드 (raw = iv + ciphertext)
-    raw = base64.b64decode(enc_b64_padded)
+    raw = base64.urlsafe_b64decode(fix_padding(enc_b64_unquoted))
     st.subheader("4️⃣ Base64 디코딩 (raw bytes)")
     st.code(raw.hex(), language="plaintext")
 
