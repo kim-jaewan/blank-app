@@ -64,7 +64,7 @@ def decrypt_token_step_by_step(enc_b64, app_key):
 
 # --- Streamlit UI 시작 ---
 params = st.query_params
-raw_token = params.get("token", [None])[0]
+raw_token = params.get("token", [None])
 redirect_to = params.get("redirect_to", ["/"])[0]
 
 st.title("🔐 SSO 토큰 디코딩 디버깅")
