@@ -5,6 +5,7 @@ from Crypto.Cipher import AES
 import json
 from urllib.parse import unquote
 
+JWT_SECRET= "Wvr8vCAPRVEIQHMjoVpmonPrgCTpk3Jmp4T0nvfkVDA/SKU6aDvD+QO72fC6ImFUImdReywy5vy9Lu9QcVJkJw=="
 APP_KEY = "base64:gEl/34nLR6mc2OhlbWsmZvu5rPVGWZLaDQinl/2GqhI="
 
 def fix_padding(s: str) -> str:
@@ -79,8 +80,13 @@ try:
 
     # JWT 페이로드 JSON 파싱
     try:
-        payload = json.loads(jwt_token)
-        st.subheader("🔟 JWT Payload")
+        payload = jwt.decode(
+            jwt_token,
+            JWT_SECRET,
+            algorithms=["HS256"],
+            options={"require": ["exp", "iss", "aud"]},  
+        )
+        st.subheader("🔟 JWT Payload (검증 완료)")
         st.json(payload)
     except Exception:
         st.warning("⚠️ JWT가 JSON 포맷이 아닙니다.")
