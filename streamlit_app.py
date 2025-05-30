@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import base64
 from Crypto.Cipher import AES
 import json
@@ -85,12 +86,14 @@ try:
         st.warning("⚠️ JWT가 JSON 포맷이 아닙니다.")
 
     # 실제 리디렉션 (디버깅 후에는 활성화)
-    st.success("✅ 인증 성공! 3초 후 이동합니다.")
-    st.markdown("""
-<script>
-  window.location.href = "/";
-</script>
-""", unsafe_allow_html=True)
+    components.html(
+    """
+    <script>
+      window.location.href = "/";
+    </script>
+    """,
+    height=0,
+)
 
 except Exception as e:
     st.error(f"❌ 디코딩 과정 중 오류 발생: {e}")
