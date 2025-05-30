@@ -6,8 +6,15 @@ from urllib.parse import unquote
 
 APP_KEY = "base64:X06Qj5yQdp+WViPbjbvdWLcCvHz0lBvoCEGkT6mxmGM="
 
-def fix_padding(s):
-    return s + "=" * (-len(s) % 4)
+def fix_padding(s: str) -> str:
+    mod = len(s) % 4
+    if mod == 1:
+        # 길이 자체가 잘못된 경우
+        raise ValueError("Invalid base64 string length: cannot be 1 mod 4")
+    if mod in (2, 3):
+        s += "=" * (4 - mod)
+    return s
+
 
 def decrypt_token_step_by_step(enc_b64, app_key):
     st.subheader("1️⃣ 원본 인코딩 토큰")
