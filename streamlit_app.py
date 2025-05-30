@@ -84,7 +84,7 @@ try:
             jwt_token,
             JWT_SECRET,                # A 사이트와 공유한 서명 키
             algorithms=["HS256"],      # 서명 알고리즘
-            options={"require": ["exp", "iss", "aud"]},  
+            options={"require": ["exp"]},  
         )
         st.subheader("🔟 JWT Payload (검증 완료)")
         st.json(payload)
