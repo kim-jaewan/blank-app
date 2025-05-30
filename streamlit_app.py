@@ -4,7 +4,7 @@ from Crypto.Cipher import AES
 import json
 from urllib.parse import unquote
 
-APP_KEY = "base64:X06Qj5yQdp+WViPbjbvdWLcCvHz0lBvoCEGkT6mxmGM="
+APP_KEY = "base64:gEl/34nLR6mc2OhlbWsmZvu5rPVGWZLaDQinl/2GqhI="
 
 def fix_padding(s: str) -> str:
     mod = len(s) % 4
