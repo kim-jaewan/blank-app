@@ -5,8 +5,8 @@ from Crypto.Cipher import AES
 import jwt
 from urllib.parse import unquote
 
-JWT_SECRET= "y2KvwnjAMbv4dwrNl8uCRreJjF5Q60ptqK1w5X3AT/SxfJdIRb6TPIve7lAM85klcpWmod8TPNM9ePXS6Z4rkA=="
-APP_KEY = "base64:gEl/34nLR6mc2OhlbWsmZvu5rPVGWZLaDQinl/2GqhI="
+JWT_SECRET= ""
+APP_KEY = ""
 
 def fix_padding(s: str) -> str:
     mod = len(s) % 4
@@ -82,8 +82,8 @@ try:
     try:
         payload = jwt.decode(
             jwt_token,
-            JWT_SECRET,                # A 사이트와 공유한 서명 키
-            algorithms=["HS256"],      # 서명 알고리즘
+            JWT_SECRET,
+            algorithms=["HS256"],
             options={"require": ["exp"]},  
         )
         st.subheader("🔟 JWT Payload (검증 완료)")
